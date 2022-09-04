@@ -18,9 +18,10 @@ export default class Countdown extends React.Component {
 
     tick() {
         this.setState({
-            dateTimeNow: moment().toString()
+            dateTimeNow: moment().toString(),
         });
     }
+    
     render() {
         const {dateTimeNow} = this.state;
         const timeLeftSecs = moment("20220928 17:00:00", "YYYYMMDD hh:mm:ss").diff(dateTimeNow, 'seconds');
@@ -35,6 +36,7 @@ export default class Countdown extends React.Component {
                 timeLeftSeconds = (timeLeftHoursRemainer%TimeEnum.Seconds);
             }
         }
+        
 
         return(
             <div>
