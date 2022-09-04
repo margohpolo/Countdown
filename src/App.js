@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import Countdown from './Countdown';
+import Countdown from './countdown/Countdown';
 
 function App() {
 
