@@ -27,17 +27,20 @@ export default class Timer extends React.Component {
             {label: 'Days Left', count: this.props.daysLeft*100/31},
             {label: 'Days Elapsed', count: (31 - this.props.daysLeft)*100/31}
         ];
-        var width = 200;
-        var height = 200;
+        var width = 360;
+        var height = 360;
         var donutWidth = 25;
         var radius1 = Math.min(width, height) / 2;
         var radius2 = radius1 - donutWidth;
         var radius3 = radius2 - donutWidth;
         var radius4 = radius3 - donutWidth;
-        var color1 = d3.scaleOrdinal(["#3182bd","#9ecae1"]);
-        var color2 = d3.scaleOrdinal(["#31a354","#a1d99b"]);
-        var color3 = d3.scaleOrdinal(["#756bb1","#bcbddc"]);
-        var color4 = d3.scaleOrdinal(["#636363","#bdbdbd"]);
+        //TODO: Brightness gradient: outside brightest; then slowly darker as moving inwards, but all different colors
+        //TODO: Make all 4 as rings...?
+        //TODO: Put Countdown Timing in centre
+        var color1 = d3.scaleOrdinal(["#61dafb","#333333"]);
+        var color2 = d3.scaleOrdinal(["#09dd09","#404040"]);
+        var color3 = d3.scaleOrdinal(["#7e71fb","#4d4d4d"]);
+        var color4 = d3.scaleOrdinal(["#ffe100","#666666"]);
         var svg = d3.select('#chart')
             .append('svg')
             .attr('width', width)
@@ -65,8 +68,9 @@ export default class Timer extends React.Component {
         var arc3 = d3.arc()
             .innerRadius(radius3 - donutWidth)  
             .outerRadius(radius3);
-        var arc4 = d3.arc()  
+        var arc4 = d3.arc()
             .outerRadius(radius4);
+            
         var pie = d3.pie()
             .padAngle(0)
             .value(function(d) {return d.count;})
@@ -95,6 +99,14 @@ export default class Timer extends React.Component {
             .append('path')
             .attr('d', arc4)
             .attr('fill', function(d, i) {return color4(d.data.label)});
+        path4.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('alignment-baseline', 'middle')
+            .text(this.props.daysLeft + ' days, ' 
+                + this.props.hoursLeft + ' hours, ' 
+                + this.props.minutesLeft + ' minutes, ' 
+                + this.props.secondsLeft + ' seconds'
+            );
     }
 
     render() {
