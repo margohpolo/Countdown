@@ -10,6 +10,10 @@ export default class Timer extends React.Component {
         super(props);
     }
 
+    // componentDidMount(){
+    //     this.makeDonuts();
+    // }
+
     makeDonuts() {
         var dataset1 = [
             {label: 'Seconds Left', count: this.props.secondsLeft*100/TimeEnum.Seconds},
@@ -27,20 +31,28 @@ export default class Timer extends React.Component {
             {label: 'Days Left', count: this.props.daysLeft*100/31},
             {label: 'Days Elapsed', count: (31 - this.props.daysLeft)*100/31}
         ];
-        var width = 360;
-        var height = 360;
-        var donutWidth = 25;
+        const setFiveLabel = this.props.daysLeft.toString() + ' : ' 
+                + this.props.hoursLeft.toString() + ' : ' 
+                + this.props.minutesLeft.toString() + ' : ' 
+                + this.props.secondsLeft.toString();
+        var dataset5 = [
+            {label: setFiveLabel, count: 0}
+        ];
+        var width = 400;
+        var height = 400;
+        var donutWidth = 30;
         var radius1 = Math.min(width, height) / 2;
         var radius2 = radius1 - donutWidth;
         var radius3 = radius2 - donutWidth;
         var radius4 = radius3 - donutWidth;
         //TODO: Brightness gradient: outside brightest; then slowly darker as moving inwards, but all different colors
-        //TODO: Make all 4 as rings...?
-        //TODO: Put Countdown Timing in centre
+        //X-TODO: Make all 4 as rings...?
+        //TODO: Put Countdown Timing in centre -> need to adjust Font & Color
         var color1 = d3.scaleOrdinal(["#61dafb","#333333"]);
         var color2 = d3.scaleOrdinal(["#09dd09","#404040"]);
         var color3 = d3.scaleOrdinal(["#7e71fb","#4d4d4d"]);
-        var color4 = d3.scaleOrdinal(["#ffe100","#666666"]);
+        var color4 = d3.scaleOrdinal(["#ce3b51","#666666"]);
+        var color5 = d3.scaleOrdinal(["#000000","#000000"]);
         var svg = d3.select('#chart')
             .append('svg')
             .attr('width', width)
@@ -58,6 +70,9 @@ export default class Timer extends React.Component {
         var svg4 = svg.append('g')
             .attr('transform', 'translate(' + (width / 2) + 
             ',' + (height / 2) + ')');
+        var svg5 = svg.append('g')
+            .attr('transform', 'translate(' + (width / 2) + 
+            ',' + (height / 2) + ')');
 
         var arc1 = d3.arc()
             .innerRadius(radius1 - donutWidth)  
@@ -69,6 +84,7 @@ export default class Timer extends React.Component {
             .innerRadius(radius3 - donutWidth)  
             .outerRadius(radius3);
         var arc4 = d3.arc()
+            .innerRadius(0)
             .outerRadius(radius4);
             
         var pie = d3.pie()
@@ -99,14 +115,15 @@ export default class Timer extends React.Component {
             .append('path')
             .attr('d', arc4)
             .attr('fill', function(d, i) {return color4(d.data.label)});
-        path4.append('text')
+        var path5 = svg5.selectAll('path')
+            .data(pie(dataset5))
+            .enter()
+            .append('text')
             .attr('text-anchor', 'middle')
             .attr('alignment-baseline', 'middle')
-            .text(this.props.daysLeft + ' days, ' 
-                + this.props.hoursLeft + ' hours, ' 
-                + this.props.minutesLeft + ' minutes, ' 
-                + this.props.secondsLeft + ' seconds'
-            );
+            .attr('d', arc4)
+            .style('fill', color5)
+            .text((d) => d.data.label);
     }
 
     render() {
@@ -117,9 +134,6 @@ export default class Timer extends React.Component {
         return(
             <div>
             <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.6/d3.min.js" data-semver="3.4.6" data-require="d3@*" />
-                <a>{this.props.daysLeft + ' days, ' + this.props.hoursLeft + ' hours, ' + this.props.minutesLeft + ' minutes, ' + this.props.secondsLeft + ' seconds'}</a>
-                <br />
-                <br />
                 <div id="chart" />
             </div>
         );

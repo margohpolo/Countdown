@@ -40,10 +40,10 @@ export default class Countdown extends React.Component {
 
         return(
             <div>
-                <a>{'The time now is: ' + dateTimeNow}</a>
+                <a>{'The DateTime now is: ' + dateTimeNow}</a>
                 <br />
                 <br />
-                <h3>Countdown to Freedom:</h3>
+                <h3>Countdown to Freedom - <br />Days : Hours : Minutes : Seconds</h3>
                 <br />
                 <Timer 
                     daysLeft = {timeLeftDays}
